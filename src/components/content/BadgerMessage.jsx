@@ -1,5 +1,5 @@
 import React from "react"
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 
 function BadgerMessage(props) {
 
@@ -11,7 +11,11 @@ function BadgerMessage(props) {
         <br/>
         <i>{props.poster}</i>
         <p>{props.content}</p>
-    </Card>
-}
 
-export default BadgerMessage;
+        {props.user === props.poster && (
+            <Button variant="danger" onClick={() => props.deleted(props.id)}>Delete Post</Button>
+        )}
+    </Card>
+}   
+
+export default BadgerMessage;   

@@ -1,18 +1,23 @@
-import React, { useState } from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { Link, Outlet } from "react-router-dom";
+import React, { useEffect, useState} from "react";
+import {Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Link, Outlet, useNavigate} from "react-router-dom";
 
 import crest from '../../assets/uw-crest.svg'
 import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
 
 function BadgerLayout(props) {
+    const [loginStatus, setLoginStatus] = useState(() => {
+        return JSON.parse(sessionStorage.getItem("loginStatus")) || { loggedIn: false, username: null }
+    });
+    const navigate = useNavigate()
 
-    // TODO @ Step 6:
-    // You'll probably want to see if there is an existing
-    // user in sessionStorage first. If so, that should
-    // be your initial loginStatus state.
-    const [loginStatus, setLoginStatus] = useState(undefined)
+    useEffect(() => {
+        sessionStorage.setItem("loginStatus", JSON.stringify(loginStatus))
+    }, [loginStatus])
 
+    const handleLogout = () => {
+        navigate('/logout')
+    }
     return (
         <div>
             <Navbar bg="dark" variant="dark">
@@ -29,12 +34,20 @@ function BadgerLayout(props) {
                     </Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/">Home</Nav.Link>
-                        <Nav.Link as={Link} to="login">Login</Nav.Link>
-                        <Nav.Link as={Link} to="register">Register</Nav.Link>
+                        {loginStatus.loggedIn ? (
+                            <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                        ) : (
+                            <>
+                                <Nav.Link as={Link} to="login">Login</Nav.Link>
+                                <Nav.Link as={Link} to="register">Register</Nav.Link>
+                            </>
+                        )}
                         <NavDropdown title="Chatrooms">
-                            {
-                                /* TODO Display a NavDropdown.Item for each chatroom that sends the user to that chatroom! */
-                            }
+                            {props.chatrooms.map(chatroom => (
+                                <NavDropdown.Item key={chatroom} as={Link} to={`/chatrooms/${chatroom}`}>
+                                    {chatroom}
+                                </NavDropdown.Item>
+                            ))}
                         </NavDropdown>
                     </Nav>
                 </Container>
@@ -47,5 +60,6 @@ function BadgerLayout(props) {
         </div>
     );
 }
+
 
 export default BadgerLayout;
