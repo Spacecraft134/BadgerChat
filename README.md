@@ -1,4 +1,4 @@
-# Badger Buddies 🐾
+# Badger Buddies 
 
 Badger Buddies is a cat adoption web app built with **React**, **React-Bootstrap**, and **React Router**.  
 It showcases adoptable cats from the [Madison Cat Project](https://www.madisoncatproject.org/) and allows users to save, unsave, and adopt cats using browser **sessionStorage** for state persistence.
